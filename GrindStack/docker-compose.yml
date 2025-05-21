@@ -1,0 +1,118 @@
+
+version: '3.8'
+
+services:
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./services/user-service/.env
+    restart: unless-stopped
+    depends_on:
+      - mongo-user
+    networks:
+      - grindstack-net
+
+  product-service:
+    build: ./services/product-service
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./services/product-service/.env
+    restart: unless-stopped
+    depends_on:
+      - mongo-product
+      - rabbitmq
+    networks:
+      - grindstack-net
+
+  cart-service:
+    build: ./services/cart-service
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./services/cart-service/.env
+    restart: unless-stopped
+    depends_on:
+      - mongo-cart
+    networks:
+      - grindstack-net
+
+  order-service:
+    build: ./services/order-service
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./services/order-service/.env
+    restart: unless-stopped
+    depends_on:
+      - mongo-order
+      - rabbitmq
+    networks:
+      - grindstack-net
+
+  mongo-user:
+    image: mongo
+    container_name: mongo-user
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-user-data:/data/db
+    restart: unless-stopped
+    networks:
+      - grindstack-net
+
+  mongo-product:
+    image: mongo
+    container_name: mongo-product
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-product-data:/data/db
+    restart: unless-stopped
+    networks:
+      - grindstack-net
+
+  mongo-cart:
+    image: mongo
+    container_name: mongo-cart
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo-cart-data:/data/db
+    restart: unless-stopped
+    networks:
+      - grindstack-net
+
+  mongo-order:
+    image: mongo
+    container_name: mongo-order
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongo-order-data:/data/db
+    restart: unless-stopped
+    networks:
+      - grindstack-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: unless-stopped
+    networks:
+      - grindstack-net
+
+volumes:
+  mongo-user-data:
+  mongo-product-data:
+  mongo-cart-data:
+  mongo-order-data:
+
+networks:
+  grindstack-net:

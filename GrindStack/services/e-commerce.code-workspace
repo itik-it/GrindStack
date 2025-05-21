@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "product-catalog-api"
+		},
+		{
+			"path": "order-api"
+		}
+	],
+	"settings": {}
+}
