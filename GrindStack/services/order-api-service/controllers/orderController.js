@@ -15,3 +15,8 @@ exports.getById = async (req, res) => {
   if (!order) return res.status(404).json({ message: 'Not Found' });
   res.json(order);
 };
+
+exports.getByUserId = async (req, res) => {
+  const orders = await orderService.getOrdersByUserId(req.params.userId);
+  res.json(orders);
+};

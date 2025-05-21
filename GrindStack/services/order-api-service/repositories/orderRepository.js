@@ -12,6 +12,10 @@ class OrderRepository {
   async getById(id) {
     return Order.findById(id);
   }
+
+  async getByUserId(userId) {
+    return Order.find({ userId });
+  }
 }
 
 module.exports = new OrderRepository();

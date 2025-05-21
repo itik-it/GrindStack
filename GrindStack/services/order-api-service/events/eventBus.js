@@ -17,7 +17,7 @@ class EventBus {
   async publish(queue, message) {
     await this.connect();
     await this.channel.assertQueue(queue, { durable: true });
-    this.channel.sendToQueue("GrindStack.Orders Received", queue, Buffer.from(JSON.stringify(message)), {
+    this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)), {
       persistent: true,
     });
     console.log(`Published event to ${queue}`, message);

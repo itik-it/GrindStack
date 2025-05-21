@@ -1,97 +1,63 @@
-
-version: '3.8'
+version: "3.8"
 
 services:
-  user-service:
-    build: ./services/user-service
+  user-api-service:
+    build: ./services/user-api-service
     ports:
       - "5001:5001"
-    env_file:
-      - ./services/user-service/.env
     restart: unless-stopped
     depends_on:
-      - mongo-user
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/GridStackUser
     networks:
       - grindstack-net
 
-  product-service:
-    build: ./services/product-service
+  product-api-service:
+    build: ./services/product-catalog-api-service
     ports:
       - "5002:5002"
-    env_file:
-      - ./services/product-service/.env
     restart: unless-stopped
     depends_on:
-      - mongo-product
+      - mongo
       - rabbitmq
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/GridStackProductsCatalog
     networks:
       - grindstack-net
 
-  cart-service:
-    build: ./services/cart-service
-    ports:
-      - "5003:5003"
-    env_file:
-      - ./services/cart-service/.env
-    restart: unless-stopped
-    depends_on:
-      - mongo-cart
-    networks:
-      - grindstack-net
-
-  order-service:
-    build: ./services/order-service
+  cart-api-service:
+    build: ./services/cart-api-service
     ports:
       - "5004:5004"
-    env_file:
-      - ./services/order-service/.env
     restart: unless-stopped
     depends_on:
-      - mongo-order
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/GridStackCart
+    networks:
+      - grindstack-net
+
+  order-api-service:
+    build: ./services/order-api-service
+    ports:
+      - "5003:5003"
+    restart: unless-stopped
+    depends_on:
+      - mongo
       - rabbitmq
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/GridStackOrders
     networks:
       - grindstack-net
 
-  mongo-user:
+  mongo:
     image: mongo
-    container_name: mongo-user
+    container_name: mongo
     ports:
-      - "27017:27017"
+      - "27017:27017"  # 👈 One MongoDB exposed to host
     volumes:
-      - mongo-user-data:/data/db
-    restart: unless-stopped
-    networks:
-      - grindstack-net
-
-  mongo-product:
-    image: mongo
-    container_name: mongo-product
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo-product-data:/data/db
-    restart: unless-stopped
-    networks:
-      - grindstack-net
-
-  mongo-cart:
-    image: mongo
-    container_name: mongo-cart
-    ports:
-      - "27019:27017"
-    volumes:
-      - mongo-cart-data:/data/db
-    restart: unless-stopped
-    networks:
-      - grindstack-net
-
-  mongo-order:
-    image: mongo
-    container_name: mongo-order
-    ports:
-      - "27020:27017"
-    volumes:
-      - mongo-order-data:/data/db
+      - mongo-data:/data/db
     restart: unless-stopped
     networks:
       - grindstack-net
@@ -102,17 +68,15 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: junedelmar
+      RABBITMQ_DEFAULT_PASS: junedelmar
     restart: unless-stopped
     networks:
       - grindstack-net
 
 volumes:
-  mongo-user-data:
-  mongo-product-data:
-  mongo-cart-data:
-  mongo-order-data:
+  mongo-data:
 
 networks:
   grindstack-net:
+    driver: bridge

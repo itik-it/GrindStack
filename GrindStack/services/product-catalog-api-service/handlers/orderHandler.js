@@ -2,18 +2,23 @@ const eventBus = require('../events/eventsBus');
 const productService = require('../services/productService');
 
 async function listenToOrderPlaced() {
-  await eventBus.subscribe('OrderPlaced', async (event) => {
-    console.log('OrderPlaced event received:', event);
+  await eventBus.subscribe('Gridstack.OrderPlaced', async (event) => {
+    console.log('Gridstack.OrderPlaced event received:', event);
 
-    // Example event: { productId: "abc123", quantity: 2 }
+    if (Array.isArray(event.items)) {
+      for (const item of event.items) {
+        const product = await productService.getProductById(item.productId);
 
-    const product = await productService.getProductById(event.productId);
-    if (product && product.stock >= event.quantity) {
-      const newStock = product.stock - event.quantity;
-      await productService.updateStock(event.productId, newStock);
-      console.log(`Stock updated for product ${event.productId}: ${newStock}`);
+        if (product && product.stock >= item.quantity) {
+          const newStock = product.stock - item.quantity;
+          await productService.updateStock(item.productId, newStock);
+          console.log(`Stock updated for product ${item.productId}: ${newStock}`);
+        } else {
+          console.warn(`Insufficient stock for product ${item.productId}`);
+        }
+      }
     } else {
-      console.warn(`Insufficient stock for product ${event.productId}`);
+      console.error("❌ 'items' is missing or not an array:", event);
     }
   });
 }

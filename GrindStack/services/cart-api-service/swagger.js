@@ -1,25 +1,17 @@
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: '3.0.0',
     info: {
-      title: "Cart Service API",
-      version: "1.0.0",
-      description: "API documentation for Cart Service"
+      title: 'Cart Service API',
+      version: '1.0.0',
+      description: 'API documentation for Cart Service',
     },
-    servers: [
-      {
-        url: "http://localhost:5000"
-      }
-    ]
   },
-  apis: ["./routes/*.js"]
+  apis: ['./routes/*.js'], // <-- files containing annotations
 };
 
-const swaggerSpec = swaggerJsDoc(options);
+const swaggerSpec = swaggerJsdoc(options);
 
-module.exports = (app) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-};
+module.exports = swaggerSpec;
