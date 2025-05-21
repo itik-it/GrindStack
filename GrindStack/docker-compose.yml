@@ -55,7 +55,7 @@ services:
     image: mongo
     container_name: mongo
     ports:
-      - "27017:27017"  # 👈 One MongoDB exposed to host
+      - "27017:27017"  
     volumes:
       - mongo-data:/data/db
     restart: unless-stopped

@@ -11,7 +11,7 @@ const controller = require('../controllers/productController');
 
 /**
  * @swagger
- * /api/products:
+ * /products:
  *   get:
  *     summary: Get all products
  *     tags: [Products]
@@ -22,7 +22,7 @@ const controller = require('../controllers/productController');
 router.get('/', controller.getAll);
 /**
  * @swagger
- * /api/products/{id}:
+ * /products/{id}:
  *   get:
  *     summary: Get a product by ID
  *     tags: [Products]
@@ -41,7 +41,7 @@ router.get('/', controller.getAll);
 router.get('/:id', controller.getById);
 /**
  * @swagger
- * /api/products:
+ * /products:
  *   post:
  *     summary: Create a new product
  *     tags: [Products]
@@ -66,7 +66,7 @@ router.get('/:id', controller.getById);
 router.post('/', controller.create);
 /**
  * @swagger
- * /api/products/{id}:
+ * /products/{id}:
  *   delete:
  *     summary: Delete a product by ID
  *     tags: [Products]
@@ -85,7 +85,7 @@ router.post('/', controller.create);
 router.delete('/:id', controller.delete);
 /**
  * @swagger
- * /api/products/{id}/stock:
+ * /products/{id}/stock:
  *   patch:
  *     summary: Update stock for a product
  *     tags: [Products]

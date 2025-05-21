@@ -34,8 +34,6 @@ GrindStack/
 docker-compose up --build
 
 4. 🌐 how to stop and update the docker
-docker-compose down -- TO Stop Running services
-docker-compose down -v  TO remove volumes (MongoDB data)
-docker-compose restart - TO Apply Code Updates (without rebuilding images)
-docker-compose up --build --force-recreate  TO Rebuild After Major Change
-docker system prune -a --volumes TO Clean everthing
+docker-compose down --volumes --remove-orphans
+docker-compose build
+docker-compose up

@@ -8,7 +8,7 @@ const controller = require('../controllers/orderController');
  *   name: Orders
  *   description: Order management
  *
- * /api/orders:
+ * /orders:
  *   post:
  *     summary: Create a new order from cart checkout
  *     tags: [Orders]
@@ -43,7 +43,7 @@ const controller = require('../controllers/orderController');
  *       200:
  *         description: List of orders
  *
- * /api/orders/{id}:
+ * /orders/{id}:
  *   get:
  *     summary: Get an order by ID
  *     tags: [Orders]
@@ -59,7 +59,7 @@ const controller = require('../controllers/orderController');
  *       404:
  *         description: Not found
  *
- * /api/orders/user/{userId}:
+ * /orders/user/{userId}:
  *   get:
  *     summary: Get orders by user ID
  *     tags: [Orders]

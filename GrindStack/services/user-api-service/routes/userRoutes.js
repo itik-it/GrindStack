@@ -4,7 +4,7 @@ const { registerUser, loginUser } = require('../controllers/userController');
 
 /**
  * @swagger
- * /register:
+ * /users/register:
  *   post:
  *     summary: Register a new user
  *     tags:
@@ -32,7 +32,7 @@ router.post('/register', registerUser);
 
 /**
  * @swagger
- * /login:
+ * /users/login:
  *   post:
  *     summary: Login user and get JWT
  *     tags:
