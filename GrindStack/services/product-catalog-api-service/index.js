@@ -20,7 +20,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler); 
+
 connectDB();
 
 app.use('/products', productRoutes);
@@ -29,7 +29,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // eventBus.publish('OrderPlaced', { productId: 'abc123', quantity: 1 });
 
 listenToOrderPlaced();
-
+app.use(errorHandler); 
 const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

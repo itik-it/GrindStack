@@ -37,3 +37,17 @@ docker-compose up --build
 docker-compose down --volumes --remove-orphans
 docker-compose build
 docker-compose up
+
+5. 🌐 to Check docker MongoDb
+Open new terminal
+input docker ps
+look for the container
+then type
+
+docker exec -it <container_name_or_id> mongosh
+or
+docker exec -it <container_name_or_id> mongo
+then type
+show dbs
+use your_db
+db.your_collection.find()

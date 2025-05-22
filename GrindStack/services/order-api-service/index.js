@@ -17,7 +17,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler);
+
 
 // Connect to DB
 connectDB();
@@ -25,7 +25,7 @@ connectDB();
 // Routes
 app.use('/orders', orderRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use(errorHandler);
 // Server listener
 const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => {

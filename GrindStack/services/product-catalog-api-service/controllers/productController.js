@@ -6,14 +6,33 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const product = await productService.getProductById(req.params.id);
-  if (!product) return res.status(404).json({ message: 'Not Found' });
-  res.json(product);
+  try {
+    const product = await productService.getProductById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Not Found' });
+    res.json(product);
+  } catch (error) {
+    console.error('Get product by ID error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 exports.create = async (req, res) => {
-  const newProduct = await productService.createProduct(req.body);
-  res.status(201).json(newProduct);
+  try {
+    const { images } = req.body;
+
+    if (images && Array.isArray(images)) {
+      const invalid = images.find(img => !/^data:image\/(png|jpeg|jpg);base64,/.test(img));
+      if (invalid) {
+        return res.status(400).json({ error: 'One or more images are not valid base64 strings with proper data URI prefix.' });
+      }
+    }
+
+    const newProduct = await productService.createProduct(req.body);
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error('Create Product Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 exports.delete = async (req, res) => {
@@ -21,6 +40,27 @@ exports.delete = async (req, res) => {
   if (!deleted) return res.status(404).json({ message: 'Not Found' });
   res.json(deleted);
 };
+
+exports.updateProduct = async (req, res) => {
+  try {
+    const { images } = req.body;
+    if (images && Array.isArray(images)) {
+      const invalid = images.find(img => !/^data:image\/(png|jpeg|jpg);base64,/.test(img));
+      if (invalid) {
+        return res.status(400).json({ error: 'One or more images are not valid base64 strings with proper data URI prefix.' });
+      }
+    }
+
+    const updatedProduct = await productService.updateProduct(req.params.id, req.body);
+    if (!updatedProduct) return res.status(404).json({ message: 'Product not found' });
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error('Update Product Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
 exports.updateStock = async (req, res) => {
   const { stock } = req.body;

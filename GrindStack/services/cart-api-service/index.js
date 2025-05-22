@@ -23,14 +23,15 @@ redisClient.connect()
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler);
+
 
 // Routes
 app.use('/cart', cartRoutes);
 
 // Swagger Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+// Error handling middleware
+app.use(errorHandler);
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Cart Service running on http://localhost:${PORT}`);
