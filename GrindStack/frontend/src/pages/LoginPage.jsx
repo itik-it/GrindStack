@@ -32,11 +32,11 @@ const LoginPage = () => {
       sessionStorage.setItem('authToken', data.token);
       sessionStorage.setItem('role', data.role);
       sessionStorage.setItem('userId', data.userId);
+      sessionStorage.setItem('username', data.username);
 
       // console.log('Login successful:', data);
       // // Navigate to the appropriate dashboard based on role
       
-      sessionStorage.setItem('role', data.role);
       navigate(`/${data.role.toLowerCase()}`);
     } catch (err) {
       console.error(err);
