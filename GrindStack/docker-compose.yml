@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   user-api-service:
     build: ./services/user-api-service
@@ -69,6 +71,19 @@ services:
       RABBITMQ_DEFAULT_USER: junedelmar
       RABBITMQ_DEFAULT_PASS: junedelmar
     restart: unless-stopped
+    networks:
+      - grindstack-net
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    depends_on:
+      - user-api-service
+      - product-api-service
+      - cart-api-service
+      - order-api-service
     networks:
       - grindstack-net
 

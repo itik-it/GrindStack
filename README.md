@@ -33,21 +33,21 @@ GrindStack/
 3. 🐳 Start everything
 docker-compose up --build
 
-4. 🌐 how to stop and update the docker
-docker-compose down --volumes --remove-orphans
-docker-compose build
-docker-compose up
+4. 🌐 how to stop and update the docker </br>
+docker-compose down --volumes --remove-orphans </br>
+docker-compose build </br>
+docker-compose up </br>
 
-5. 🌐 to Check docker MongoDb
-Open new terminal
-input docker ps
-look for the container
-then type
+5. 🌐 to Check docker MongoDb</br>
+Open new terminal</br>
+input docker ps</br>
+look for the container</br>
+then type</br>
 
-docker exec -it <container_name_or_id> mongosh
-or
-docker exec -it <container_name_or_id> mongo
-then type
-show dbs
-use your_db
-db.your_collection.find()
+docker exec -it <container_name_or_id> mongosh </br>
+or </br>
+docker exec -it <container_name_or_id> mongo </br>
+then type  </br>
+show dbs </br>
+use your_db </br>
+db.your_collection.find() </br>
