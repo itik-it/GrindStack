@@ -2,13 +2,15 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.js');
 
 exports.registerUser = async (req, res) => {
-  const { name, email, password,role } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
-    const user = new User({ name, email, password ,role});
+    console.log("Received user data:", req.body);
+    const user = new User({ name, email, password, role });
     await user.save();
     res.status(201).json({ message: 'User registered' });
   } catch (err) {
+    console.error("Error during user registration:", err); 
     res.status(500).json({ message: 'Registration failed', error: err.message });
   }
 };

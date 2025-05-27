@@ -70,14 +70,16 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: junedelmar
-      RABBITMQ_DEFAULT_PASS: junedelmar
+      - RABBITMQ_DEFAULT_USER=junedelmar
+      - RABBITMQ_DEFAULT_PASS=junedelmar
     restart: unless-stopped
     networks:
       - grindstack-net
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:80"
     restart: unless-stopped
