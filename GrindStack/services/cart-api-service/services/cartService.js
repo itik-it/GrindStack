@@ -1,8 +1,8 @@
   const { redisClient } = require('../config/redisClient');
   const axios = require('axios');
 
-const PRODUCT_API_URL = 'http://product-api-service:5002/products';
-const ORDER_API_URL = 'http://order-api-service:5003/orders';
+  const PRODUCT_API_URL = process.env.PRODUCT_API_URL;
+  const ORDER_API_URL = process.env.ORDER_API_URL;
   class CartService {
     async addToCart(userId, productId, quantity) {
       const product = await this.fetchProduct(productId);

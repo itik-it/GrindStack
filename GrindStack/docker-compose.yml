@@ -35,6 +35,8 @@ services:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/GridStackCart
+      - PRODUCT_API_URL=http://product-api-service:5002/products
+      - ORDER_API_URL=http://order-api-service:5003/orders
     networks:
       - grindstack-net
 
