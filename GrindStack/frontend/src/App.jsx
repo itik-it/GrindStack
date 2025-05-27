@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // ✅ correct import
 
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
@@ -15,10 +16,23 @@ function App() {
     const storedRole = sessionStorage.getItem('role');
 
     if (token && storedRole) {
-      setUserRole(storedRole);
-      setIsAuthenticated(true);
+      try {
+        const decoded = jwtDecode(token);
+        const now = Date.now() / 1000;
+
+        if (decoded.exp > now) {
+          setUserRole(storedRole);
+          setIsAuthenticated(true);
+        } else {
+          sessionStorage.clear();
+          setIsAuthenticated(false);
+        }
+      } catch (err) {
+        console.error("Invalid token", err);
+        sessionStorage.clear();
+        setIsAuthenticated(false);
+      }
     } else {
-      setUserRole('');
       setIsAuthenticated(false);
     }
   }, []);
@@ -38,10 +52,9 @@ function App() {
         />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        {/* Example protected dashboards
-        <Route path="/buyer" element={<BuyerDashboard />} />
+        {/* Protected routes can be added here */}
+        {/* <Route path="/buyer" element={<BuyerDashboard />} />
         <Route path="/seller" element={<SellerDashboard />} /> */}
-        
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
