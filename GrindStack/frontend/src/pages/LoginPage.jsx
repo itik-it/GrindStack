@@ -34,10 +34,8 @@ const LoginPage = () => {
       sessionStorage.setItem('userId', data.userId);
       sessionStorage.setItem('username', data.username);
 
-      // console.log('Login successful:', data);
-      // // Navigate to the appropriate dashboard based on role
-      
-      navigate(`/${data.role.toLowerCase()}`);
+      // Redirect to home after login
+      navigate('/');
     } catch (err) {
       console.error(err);
       alert('Could not connect to login service.');

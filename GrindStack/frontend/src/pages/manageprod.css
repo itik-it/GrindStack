@@ -1,0 +1,185 @@
+.manage-prod-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  margin-top: 60px;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.manageprod-page .main {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.manageprod-page .main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.manageprod-page .management-section {
+  margin-top: 2rem;
+}
+
+.manageprod-page .management-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.manageprod-page .management-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.manageprod-page .management-header p {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.manageprod-page .highlight {
+  color: #ff5722;
+}
+
+.manageprod-page .menu-categories {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.manageprod-page .category-btn {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f1f1f1;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.manageprod-page .category-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.manageprod-page .category-btn.active {
+  background-color: #ff5722;
+  color: white;
+}
+
+.manageprod-page .menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.manageprod-page .menu-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.manageprod-page .menu-card:hover {
+  transform: translateY(-5px);
+}
+
+.manageprod-page .menu-card-img {
+  height: 180px;
+  object-fit: cover;
+}
+
+.manageprod-page .menu-card-content {
+  padding: 16px;
+}
+
+.manageprod-page .menu-item-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.manageprod-page .menu-item-desc {
+  color: #6c757d;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 60px;
+}
+
+.manageprod-page .menu-card-details {
+  margin: 8px 0;
+}
+
+.manageprod-page .menu-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.manageprod-page .price-tag-menu {
+  font-weight: 700;
+  color: #ff5722;
+}
+
+.manageprod-page .product-actions {
+  display: flex;
+  gap: 5px;
+}
+
+/* Keep this outside the namespace since it might be used by buttons in other contexts */
+.add-product-btn {
+  position: absolute !important;
+  right: 20px;
+  top: 0;
+  background-color: #ff5722 !important;
+  color: white !important;
+  border-radius: 25px !important;
+  padding: 8px 20px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3) !important;
+  transition: all 0.3s ease !important;
+  margin-top: 1rem !important;
+}
+
+.add-product-btn:hover {
+  background-color: #e64a19 !important;
+  box-shadow: 0 6px 14px rgba(255, 87, 34, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.manageprod-page .modal-header {
+  display: flex;
+  justify-content: space-between; /* Change to space-between for better layout */
+  align-items: flex-start; /* Align items at the top */
+  margin-bottom: 16px;
+  width: 100%;
+  position: relative;
+  padding-right: 0; /* Remove padding as we're using space-between */
+}
+
+/* Fix the close button position */
+.manageprod-page .modal-header .MuiIconButton-root {
+  position: static; /* Remove absolute positioning */
+  margin: -12px -12px 0 0; /* Use negative margins to position it properly */
+}
+
+.manageprod-page .product-form {
+  width: 100%;
+}
+
+.manageprod-page .loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}

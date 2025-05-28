@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // ✅ correct import
+import { jwtDecode } from 'jwt-decode'; 
 
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
-// import BuyerDashboard from './pages/BuyerDashboard.jsx';
-// import SellerDashboard from './pages/SellerDashboard.jsx';
+import ManageProd from './pages/manageprod';
+import Home from './pages/home';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,19 +44,15 @@ function App() {
         <Route
           path="/"
           element={
-            isAuthenticated ? (
-              <Navigate to={`/${userRole.toLowerCase()}`} replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            isAuthenticated ? <Home /> : <Navigate to="/login" replace />
           }
         />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        {/* Protected routes can be added here */}
-        {/* <Route path="/buyer" element={<BuyerDashboard />} />
-        <Route path="/seller" element={<SellerDashboard />} /> */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/manageprod" element={<ManageProd />} />
+
+        {/* Fallback for any undefined route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
