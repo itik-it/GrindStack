@@ -200,18 +200,45 @@ function ManageProd() {
     }
   };
 
+  // const handleDeleteProduct = async () => {
+  //   try {
+  //     const res = await fetch(`${baseUrl}/products/${currentProduct.productId}`, { method: 'DELETE' });
+  //     if (!res.ok) throw new Error(await res.text());
+  //     setProducts(prev => prev.filter(p => p.productId !== currentProduct.productId));
+  //     setOpenDeleteModal(false);
+  //     showAlert('Product deleted');
+  //   } catch (err) {
+  //     console.error(err);
+  //     showAlert('Delete failed', 'error');
+  //   }
+  // };
+
   const handleDeleteProduct = async () => {
-    try {
-      const res = await fetch(`${baseUrl}/products/${currentProduct.productId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error(await res.text());
-      setProducts(prev => prev.filter(p => p.productId !== currentProduct.productId));
-      setOpenDeleteModal(false);
-      showAlert('Product deleted');
-    } catch (err) {
-      console.error(err);
-      showAlert('Delete failed', 'error');
+  try {
+    // Use MongoDB's _id instead of productId for deletion
+    const idToUse = currentProduct._id;
+    
+    if (!idToUse) {
+      throw new Error('Cannot delete: Missing valid ID');
     }
-  };
+    
+    const res = await fetch(`${baseUrl}/products/${idToUse}`, { 
+      method: 'DELETE' 
+    });
+    
+    if (!res.ok) throw new Error(await res.text());
+    
+    // Update the products list after successful deletion
+    setProducts(prev => prev.filter(p => p._id !== idToUse));
+    setOpenDeleteModal(false);
+    showAlert('Product deleted successfully');
+  } catch (err) {
+    console.error('Delete error:', err);
+    showAlert('Delete failed: ' + (err.message || 'Unknown error'), 'error');
+  }
+};
+
+
 
   const openProductEditModal = (product) => {
     setCurrentProduct(product);
