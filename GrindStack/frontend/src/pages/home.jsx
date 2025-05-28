@@ -52,7 +52,7 @@ function Home() {
                   Crafted with passion, served with purpose — our artisan coffee <br />
                   is designed for professionals who never compromise on quality.
                 </p>
-                <button className="cta-button">Order Now</button>
+                <button className="cta-button" readonly>Add to cart</button>
               </div>
               <div className="hero-image">
                 <div className="coffee-cup">
@@ -120,7 +120,7 @@ function Home() {
                             ₱{item.price.toFixed(2)}
                           </Typography>
                           <Button variant="contained" className="order-btn">
-                            Order now
+                            Add to Cart
                           </Button>
                         </div>
                       </CardContent>

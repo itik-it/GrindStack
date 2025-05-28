@@ -178,7 +178,7 @@ function ManageProd() {
   const handleEditProduct = async () => {
     if (!validateForm()) return showAlert('Fix form errors', 'error');
     try {
-      const res = await fetch(`${baseUrl}/products/${currentProduct._id}`, {
+      const res = await fetch(`${baseUrl}/products/${currentProduct.productId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -191,7 +191,7 @@ function ManageProd() {
 
       if (!res.ok) throw new Error(await res.text());
       const updated = await res.json();
-      setProducts(prev => prev.map(p => p._id === updated._id ? updated : p));
+      setProducts(prev => prev.map(p => p.productId === updated.productId ? updated : p));
       setOpenEditModal(false);
       showAlert('Product updated');
     } catch (err) {
@@ -202,9 +202,9 @@ function ManageProd() {
 
   const handleDeleteProduct = async () => {
     try {
-      const res = await fetch(`${baseUrl}/products/${currentProduct._id}`, { method: 'DELETE' });
+      const res = await fetch(`${baseUrl}/products/${currentProduct.productId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error(await res.text());
-      setProducts(prev => prev.filter(p => p._id !== currentProduct._id));
+      setProducts(prev => prev.filter(p => p.productId !== currentProduct.productId));
       setOpenDeleteModal(false);
       showAlert('Product deleted');
     } catch (err) {
@@ -228,67 +228,84 @@ function ManageProd() {
   };
 
   return (
-    <div className="manageprod-page">
+    <div className="manage-prod-container manageprod-page">
       <Navbar />
       <div className="main">
-        <h1>Manage Products</h1>
-        <Button onClick={() => setOpenAddModal(true)} startIcon={<AddIcon />} variant="contained">Add Product</Button>
-        <div className="menu-categories">
-          {['hot', 'cold', 'specialty', 'pastries', 'all'].map(cat => (
-            <button key={cat} className={activeCategory === cat ? 'active' : ''} onClick={() => setActiveCategory(cat)}>
-              {cat.charAt(0).toUpperCase() + cat.slice(1)}
-            </button>
-          ))}
-        </div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : products.length === 0 ? (
-          <p>No products found.</p>
-        ) : (
-          <div className="product-list">
-            {products.map(item => (
-              <Card key={item._id}>
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={item.images?.[0] || 'https://via.placeholder.com/180'}
-                  alt={item.name}
-                />
-                <CardContent>
-                  <Typography variant="h6">{item.name}</Typography>
-                  <Typography variant="body2">₱{item.price.toFixed(2)} | Stock: {item.stock}</Typography>
-                  <IconButton onClick={() => openProductEditModal(item)}><EditIcon /></IconButton>
-                  <IconButton onClick={() => { setCurrentProduct(item); setOpenDeleteModal(true); }}><DeleteIcon /></IconButton>
-                </CardContent>
-              </Card>
+        <div className="main-container">
+          <div className="management-header">
+            <h1>Manage Products</h1>
+            <Button className="add-product-btn" onClick={() => setOpenAddModal(true)} startIcon={<AddIcon />} variant="contained">
+              Add Product
+            </Button>
+          </div>
+
+          <div className="menu-categories">
+            {['hot', 'cold', 'specialty', 'pastries', 'all'].map(cat => (
+              <button
+                key={cat}
+                className={`category-btn ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </button>
             ))}
           </div>
-        )}
+
+          {loading ? (
+            <p className="loading">Loading...</p>
+          ) : products.length === 0 ? (
+            <p>No products found.</p>
+          ) : (
+            <div className="menu-items-grid">
+              {products.map(item => (
+                <div key={item.productId} className="menu-card">
+                  <Card>
+                    <CardMedia
+                      component="img"
+                      height="180"
+                      image={item.images?.[0] || 'https://via.placeholder.com/180'}
+                      alt={item.name}
+                      className="menu-card-img"
+                    />
+                    <CardContent className="menu-card-content">
+                      <Typography className="menu-item-title" variant="h6">{item.name}</Typography>
+                      <Typography className="menu-card-details" variant="body2">
+                        ₱{item.price.toFixed(2)} | Stock: {item.stock}
+                      </Typography>
+                      <div className="product-actions">
+                        <IconButton onClick={() => openProductEditModal(item)}><EditIcon /></IconButton>
+                        <IconButton onClick={() => { setCurrentProduct(item); setOpenDeleteModal(true); }}><DeleteIcon /></IconButton>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Add Modal */}
+      {/* Modals */}
       <Modal open={openAddModal} onClose={() => setOpenAddModal(false)}>
         <Box sx={modalStyle}>
           <div className="modal-header">
             <Typography variant="h6">Add Product</Typography>
             <IconButton onClick={() => setOpenAddModal(false)}><CloseIcon /></IconButton>
           </div>
-          <ProductForm handleSubmit={handleAddProduct} formData={formData} formErrors={formErrors} handleInputChange={handleInputChange} handleImageUpload={handleImageUpload} />
+          <ProductForm {...{ formData, formErrors, handleInputChange, handleImageUpload, handleSubmit: handleAddProduct }} />
         </Box>
       </Modal>
 
-      {/* Edit Modal */}
       <Modal open={openEditModal} onClose={() => setOpenEditModal(false)}>
         <Box sx={modalStyle}>
           <div className="modal-header">
             <Typography variant="h6">Edit Product</Typography>
             <IconButton onClick={() => setOpenEditModal(false)}><CloseIcon /></IconButton>
           </div>
-          <ProductForm handleSubmit={handleEditProduct} formData={formData} formErrors={formErrors} handleInputChange={handleInputChange} handleImageUpload={handleImageUpload} isEdit />
+          <ProductForm {...{ formData, formErrors, handleInputChange, handleImageUpload, handleSubmit: handleEditProduct, isEdit: true }} />
         </Box>
       </Modal>
 
-      {/* Delete Confirmation */}
       <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
         <Box sx={modalStyle}>
           <Typography variant="h6">Delete Product</Typography>
@@ -300,7 +317,6 @@ function ManageProd() {
         </Box>
       </Modal>
 
-      {/* Alerts */}
       <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert severity={alert.severity} onClose={handleCloseAlert}>{alert.message}</Alert>
       </Snackbar>
@@ -312,32 +328,12 @@ function ProductForm({ formData, formErrors, handleInputChange, handleImageUploa
   return (
     <>
       {isEdit && (
-        <TextField
-          fullWidth margin="normal" label="Product ID" value={formData.productId}
-          disabled
-        />
+        <TextField fullWidth margin="normal" label="Product ID" value={formData.productId} disabled />
       )}
-      <TextField
-        fullWidth required margin="normal" name="name" label="Name"
-        value={formData.name} onChange={handleInputChange}
-        error={!!formErrors.name} helperText={formErrors.name}
-      />
-      <TextField
-        fullWidth required margin="normal" name="price" label="Price" type="number"
-        value={formData.price} onChange={handleInputChange}
-        error={!!formErrors.price} helperText={formErrors.price}
-        InputProps={{ startAdornment: <InputAdornment position="start">₱</InputAdornment> }}
-      />
-      <TextField
-        fullWidth required margin="normal" name="stock" label="Stock" type="number"
-        value={formData.stock} onChange={handleInputChange}
-        error={!!formErrors.stock} helperText={formErrors.stock}
-      />
-      <TextField
-        fullWidth required margin="normal" name="description" label="Description" multiline rows={3}
-        value={formData.description} onChange={handleInputChange}
-        error={!!formErrors.description} helperText={formErrors.description}
-      />
+      <TextField fullWidth required margin="normal" name="name" label="Name" value={formData.name} onChange={handleInputChange} error={!!formErrors.name} helperText={formErrors.name} />
+      <TextField fullWidth required margin="normal" name="price" label="Price" type="number" value={formData.price} onChange={handleInputChange} error={!!formErrors.price} helperText={formErrors.price} InputProps={{ startAdornment: <InputAdornment position="start">₱</InputAdornment> }} />
+      <TextField fullWidth required margin="normal" name="stock" label="Stock" type="number" value={formData.stock} onChange={handleInputChange} error={!!formErrors.stock} helperText={formErrors.stock} />
+      <TextField fullWidth required margin="normal" name="description" label="Description" multiline rows={3} value={formData.description} onChange={handleInputChange} error={!!formErrors.description} helperText={formErrors.description} />
       <FormControl fullWidth margin="normal" error={!!formErrors.category}>
         <InputLabel>Category</InputLabel>
         <Select name="category" value={formData.category} label="Category" onChange={handleInputChange}>
