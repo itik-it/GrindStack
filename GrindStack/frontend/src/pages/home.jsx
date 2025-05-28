@@ -3,13 +3,17 @@ import './home.css';
 import Navbar from './navbar';
 import GrindStackHero from '../assets/Grindstack-hero.png';
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
+import axios from 'axios';
+
+const baseUrl = import.meta.env.VITE_PRODUCT_API;
+const CART_API = import.meta.env.VITE_CART_API;  // Add this to use the cart API
 
 function Home() {
-  const baseUrl = import.meta.env.VITE_PRODUCT_API;
   const [activeCategory, setActiveCategory] = useState("hot");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch products based on active category
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -38,6 +42,29 @@ function Home() {
     fetchProducts();
   }, [activeCategory, baseUrl]);
 
+  //For Add to cart function tang ina
+  const handleAddToCart = async (item) => {
+  try {
+    const userId = sessionStorage.getItem('userId'); // Get userId from sessionStorage
+    if (!userId) {
+      alert('Please log in first!');
+      return;
+    }
+
+    // Send the API request to add the item to the cart
+    // eslint-disable-next-line no-unused-vars
+    const response = await axios.post(`${CART_API}/cart/${userId}/add`, {
+      productId: item._id, // Assuming item._id is the product ID
+      quantity: 1, // You can dynamically change this based on user input
+    });
+
+    alert('Item added to cart!');
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    alert('Failed to add to cart');
+  }
+};
+
   return (
     <div className="home-container">
       <Navbar />
@@ -52,7 +79,6 @@ function Home() {
                   Crafted with passion, served with purpose — our artisan coffee <br />
                   is designed for professionals who never compromise on quality.
                 </p>
-                <button className="cta-button" readonly>Add to cart</button>
               </div>
               <div className="hero-image">
                 <div className="coffee-cup">
@@ -97,13 +123,11 @@ function Home() {
                       <CardMedia
                         component="img"
                         height="180"
-                        image={
-                          item.images && item.images.length > 0
-                            ? item.images[0].startsWith('data:')
-                              ? item.images[0]
-                              : `data:image/jpeg;base64,${item.images[0]}`
-                            : 'https://via.placeholder.com/180x180?text=No+Image'
-                        }
+                        image={item.images && item.images.length > 0
+                          ? item.images[0].startsWith('data:') 
+                            ? item.images[0]
+                            : `data:image/jpeg;base64,${item.images[0]}`
+                          : 'https://via.placeholder.com/180x180?text=No+Image'}
                         alt={item.name}
                         className="menu-card-img"
                       />
@@ -119,7 +143,7 @@ function Home() {
                           <Typography variant="h6" className="price-tag-menu">
                             ₱{item.price.toFixed(2)}
                           </Typography>
-                          <Button variant="contained" className="order-btn">
+                          <Button variant="contained" className="order-btn" onClick={() => handleAddToCart(item)}>
                             Add to Cart
                           </Button>
                         </div>

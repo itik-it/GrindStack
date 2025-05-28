@@ -19,9 +19,12 @@ function Navbar() {
         </ul>
 
         <div className="nav-actions">
-          <button className="icon-btn" aria-label="Cart">
-            <ShoppingCartIcon style={{ fontSize: '1.6rem' }} />
-          </button>
+          <Link to="/cart" className="icon-btn" aria-label="Cart">  
+          {/* changed */}
+              <ShoppingCartIcon style={{ fontSize: '1.6rem' }} />
+          </Link>
+
+          
           <Link to="/manageprod" className="reservation-btn">
             Manage Products
           </Link>
