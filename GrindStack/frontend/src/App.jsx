@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import ManageProd from './pages/manageprod';
+import Order from './pages/orderservice';
 import Home from './pages/home';
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <Route path="/login" element={<LoginPage onLogin={checkAuth} />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/manageprod" element={<ManageProd />} />
+        <Route path="/orderservice" element={isAuthenticated ? <Order /> : <Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
