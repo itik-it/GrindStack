@@ -79,40 +79,58 @@ function ManageProd() {
       return;
     }
 
-    const compressImage = (file) => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let width = img.width, height = img.height;
-            const max = 800;
-            if (width > max || height > max) {
-              if (width > height) {
-                height *= max / width;
-                width = max;
-              } else {
-                width *= max / height;
-                height = max;
-              }
-            }
-            canvas.width = width;
-            canvas.height = height;
-            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL(file.type, 0.7));
-          };
-          img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    };
-
     try {
-      const base64 = await compressImage(file);
-      setFormData(prev => ({ ...prev, imageUrl: base64 }));
+      // Create a function to compress the image
+      const compressImage = (imageFile) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(imageFile);
+          reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+              // Create canvas for compression
+              const canvas = document.createElement('canvas');
+              // Set max dimensions (adjust as needed)
+              const MAX_WIDTH = 600;
+              const MAX_HEIGHT = 600;
+              
+              let width = img.width;
+              let height = img.height;
+              
+              // Calculate new dimensions while maintaining aspect ratio
+              if (width > height) {
+                if (width > MAX_WIDTH) {
+                  height = Math.round(height * MAX_WIDTH / width);
+                  width = MAX_WIDTH;
+                }
+              } else {
+                if (height > MAX_HEIGHT) {
+                  width = Math.round(width * MAX_HEIGHT / height);
+                  height = MAX_HEIGHT;
+                }
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              // Adjust quality (0.5 = 50% quality) - lower for smaller file size
+              const dataUrl = canvas.toDataURL(imageFile.type, 0.5);
+              resolve(dataUrl);
+            };
+            img.onerror = reject;
+          };
+          reader.onerror = reject;
+        });
+      };
+
+      const compressedImage = await compressImage(file);
+      setFormData(prev => ({ ...prev, imageUrl: compressedImage }));
     } catch (err) {
-      console.error('Image error:', err);
+      console.error('Image compression error:', err);
       showAlert('Image processing failed', 'error');
     }
   };
@@ -175,30 +193,64 @@ function ManageProd() {
     }
   };
 
-  const handleEditProduct = async () => {
-    if (!validateForm()) return showAlert('Fix form errors', 'error');
-    try {
-      const res = await fetch(`${baseUrl}/products/${currentProduct.productId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          price: parseFloat(formData.price),
-          stock: parseInt(formData.stock),
-          images: [formData.imageUrl]
-        })
-      });
+  // const handleEditProduct = async () => {
+  //   if (!validateForm()) return showAlert('Fix form errors', 'error');
+  //   try {
+  //     const res = await fetch(`${baseUrl}/products/${currentProduct.productId}`, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         ...formData,
+  //         price: parseFloat(formData.price),
+  //         stock: parseInt(formData.stock),
+  //         images: [formData.imageUrl]
+  //       })
+  //     });
 
-      if (!res.ok) throw new Error(await res.text());
-      const updated = await res.json();
-      setProducts(prev => prev.map(p => p.productId === updated.productId ? updated : p));
-      setOpenEditModal(false);
-      showAlert('Product updated');
-    } catch (err) {
-      console.error(err);
-      showAlert('Update failed', 'error');
+  //     if (!res.ok) throw new Error(await res.text());
+  //     const updated = await res.json();
+  //     setProducts(prev => prev.map(p => p.productId === updated.productId ? updated : p));
+  //     setOpenEditModal(false);
+  //     showAlert('Product updated');
+  //   } catch (err) {
+  //     console.error(err);
+  //     showAlert('Update failed', 'error');
+  //   }
+  // };
+
+  const handleEditProduct = async () => {
+  if (!validateForm()) return showAlert('Fix form errors', 'error');
+  try {
+    // Use MongoDB's _id instead of productId for update
+    const idToUse = currentProduct._id;
+    
+    if (!idToUse) {
+      throw new Error('Cannot update: Missing valid ID');
     }
-  };
+    
+    const res = await fetch(`${baseUrl}/products/${idToUse}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...formData,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock),
+        images: [formData.imageUrl]
+      })
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    const updated = await res.json();
+    
+    // Update the products list after successful update
+    setProducts(prev => prev.map(p => p._id === idToUse ? updated : p));
+    setOpenEditModal(false);
+    showAlert('Product updated successfully');
+  } catch (err) {
+    console.error('Update error:', err);
+    showAlert('Update failed: ' + (err.message || 'Unknown error'), 'error');
+  }
+};
 
   // const handleDeleteProduct = async () => {
   //   try {
@@ -353,7 +405,7 @@ function ManageProd() {
 
 function ProductForm({ formData, formErrors, handleInputChange, handleImageUpload, handleSubmit, isEdit = false }) {
   return (
-    <>
+    <div className="modal-content-wrapper">
       {isEdit && (
         <TextField fullWidth margin="normal" label="Product ID" value={formData.productId} disabled />
       )}
@@ -376,11 +428,19 @@ function ProductForm({ formData, formErrors, handleInputChange, handleImageUploa
         <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
       </Button>
       {formErrors.imageUrl && <FormHelperText error>{formErrors.imageUrl}</FormHelperText>}
-      {formData.imageUrl && <img src={formData.imageUrl} alt="Preview" style={{ maxWidth: '100%', marginTop: '1rem' }} />}
-      <Button fullWidth variant="contained" color="primary" sx={{ mt: 3 }} onClick={handleSubmit}>
-        {isEdit ? 'Save Changes' : 'Add Product'}
-      </Button>
-    </>
+      
+      {formData.imageUrl && (
+        <div className="image-preview-container">
+          <img className="image-preview" src={formData.imageUrl} alt="Preview" />
+        </div>
+      )}
+      
+      <div className="form-submit-button">
+        <Button fullWidth variant="contained" color="primary" onClick={handleSubmit}>
+          {isEdit ? 'Save Changes' : 'Add Product'}
+        </Button>
+      </div>
+    </div>
   );
 }
 

@@ -46,6 +46,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/manageprod" element={<ManageProd />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </BrowserRouter>
   );

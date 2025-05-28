@@ -207,27 +207,29 @@ html, body, #root {
 }
 
 .menu-card {
-  border-radius: 15px !important;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   position: relative;
   background-color: white;
 }
 
 .menu-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(200, 121, 65, 0.15) !important;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background-color: #fafafa;
 }
 
 .menu-card-img {
-  height: 200px;
+  height: 180px;
   object-fit: cover;
-  transition: transform 0.4s ease-out;
+  transition: transform 0.5s ease, filter 0.5s ease;
 }
 
 .menu-card:hover .menu-card-img {
   transform: scale(1.05);
+  filter: brightness(1.05);
 }
 
 .menu-card-rating {
@@ -252,6 +254,11 @@ html, body, #root {
 .menu-item-title {
   font-weight: 600 !important;
   margin-bottom: 8px !important;
+  transition: color 0.3s ease;
+}
+
+.menu-card:hover .menu-item-title {
+  color: #ff5722;
 }
 
 .menu-item-desc {
@@ -289,6 +296,17 @@ html, body, #root {
 .menu-card:hover .order-btn {
   transform: scale(1.05);
   background-color: #c87941 !important;
+}
+
+.product-actions {
+  display: flex;
+  gap: 5px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.menu-card:hover .product-actions {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {

@@ -131,7 +131,6 @@ function Home() {
                         alt={item.name}
                         className="menu-card-img"
                       />
-                      <div className="menu-card-rating">4.8</div>
                       <CardContent className="menu-card-content">
                         <Typography variant="h5" className="menu-item-title">
                           {item.name}
