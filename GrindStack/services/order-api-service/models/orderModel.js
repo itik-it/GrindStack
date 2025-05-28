@@ -10,7 +10,8 @@ const itemSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   items: { type: [itemSchema], required: true },
-  status: { type: String, default: 'pending' } 
+  status: { type: String, enum: ['pending', 'paid', 'shipped', 'delivered'], default: 'pending' }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

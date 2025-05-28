@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import ManageProd from './pages/manageprod';
 import CartPage from './pages/CartPage.jsx';
+import Order from './pages/orderservice';
 import Home from './pages/home';
 
 function App() {
@@ -44,7 +45,6 @@ function App() {
         <Route path="/login" element={<LoginPage onLogin={checkAuth} />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/manageprod" element={<ManageProd />} />
-          <Route path="/cart" element={<CartPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

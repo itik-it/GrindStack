@@ -1,8 +1,9 @@
-import React from 'react';
-import {
-  Box, Typography, TextField, Button, CardMedia
-} from '@mui/material';
+
+import { Box, Typography, TextField, Button, CardMedia } from '@mui/material';
 import Navbar from './navbar';
+import React, { useState } from 'react';
+import axios from 'axios';
+
 
 function Order() {
   const product = {
@@ -11,6 +12,34 @@ function Order() {
     price: 150,
     image: 'https://royalkitchenpatong.com/wp-content/uploads/2022/05/BLACK-COFFEE.jpg' // Replace with actual image URL
   };
+
+      const [quantity, setQuantity] = useState(1);
+
+const handleOrder = async () => {
+  if (quantity < 1) {
+    alert('Quantity must be at least 1');
+    return;
+  }
+
+  try {
+    const response = await axios.post('http://localhost:5000/orders', {
+      userId: 'user123',
+      items: [
+        {
+          productId: 'coffee001',
+          name: product.name,
+          price: product.price,
+          quantity: Number(quantity)
+        }
+      ]
+    });
+    alert('Order placed!');
+  } catch (error) {
+    console.error('Error placing order:', error);
+    alert('Failed to place order.');
+  }
+};
+
 
   return (
     <>
@@ -83,9 +112,18 @@ function Order() {
             <TextField type="number" defaultValue={1} sx={{ width: 120 }} inputProps={{ min: 1 }} />
           </Box>
 
-          <Button variant="contained" sx={{ backgroundColor: '#694A38', color: '#FFFFFC' }}>
+          <TextField
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            inputProps={{ min: 1 }}
+            sx={{ width: 120 }}
+          />
+
+          <Button variant="contained" sx={{ backgroundColor: '#694A38', color: '#FFFFFC' }} onClick={handleOrder}>
             Place Order
           </Button>
+
         </Box>
       </Box>
     </>
