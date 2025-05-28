@@ -9,6 +9,10 @@ class ProductRepository {
     return Product.findById(id);
   }
 
+  async getByCategory(category) {
+    return Product.find({ category });
+  }
+
   async create(productData) {
     return Product.create(productData);
   }

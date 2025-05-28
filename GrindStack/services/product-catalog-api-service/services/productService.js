@@ -9,6 +9,11 @@ class ProductService {
     return productRepo.getById(id);
   }
 
+  getProductsByCategory(category) {
+    if (category === 'all') return productRepo.getAll();
+    return productRepo.getByCategory(category);
+  }
+
   createProduct(data) {
     return productRepo.create(data);
   }
