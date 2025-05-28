@@ -44,7 +44,7 @@ function App() {
         <Route path="/login" element={<LoginPage onLogin={checkAuth} />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/manageprod" element={<ManageProd />} />
-        <Route path="/orderservice" element={isAuthenticated ? <Order /> : <Navigate to="/login" replace />} />
+        <Route path="/orderservice" element={ <Order />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
