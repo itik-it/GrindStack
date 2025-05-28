@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import './Navbar.css';
-import Logo from '../assets/GRINDSTACK-LOGONottle.png'; 
+import './navbar.css';
+import Logo from '../assets/GrindStack-LogoNottle.png'; 
 
 function Navbar() {
   return (

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../assets/css/LoginPage.css";
 
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
 
@@ -28,14 +28,13 @@ const LoginPage = () => {
 
       const data = await res.json();
 
-      // Store token, role, and session-based userId
+      // Save session info
       sessionStorage.setItem('authToken', data.token);
-      sessionStorage.setItem('role', data.role);
       sessionStorage.setItem('userId', data.userId);
       sessionStorage.setItem('username', data.username);
 
-      // Redirect to home after login
-      navigate('/');
+      if (onLogin) onLogin(); // Refresh auth state in App
+      navigate('/'); // Just go to home
     } catch (err) {
       console.error(err);
       alert('Could not connect to login service.');
