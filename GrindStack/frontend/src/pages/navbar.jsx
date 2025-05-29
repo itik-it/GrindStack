@@ -19,7 +19,7 @@ function Navbar() {
         </ul>
 
         <div className="nav-actions">
-          <Link to="/cart" className="icon-btn" aria-label="Cart">  
+          <Link to="/cartPage" className="icon-btn" aria-label="CartPage">  
           {/* changed */}
               <ShoppingCartIcon style={{ fontSize: '1.6rem' }} />
           </Link>

@@ -43,27 +43,29 @@ function Home() {
   }, [activeCategory, baseUrl]);
 
   //For Add to cart function tang ina
-  const handleAddToCart = async (item) => {
+const handleAddToCart = async (item) => {
   try {
-    const userId = sessionStorage.getItem('userId'); // Get userId from sessionStorage
+    const userId = sessionStorage.getItem('userId');
     if (!userId) {
       alert('Please log in first!');
       return;
     }
 
-    // Send the API request to add the item to the cart
-    // eslint-disable-next-line no-unused-vars
-    const response = await axios.post(`${CART_API}/cart/${userId}/add`, {
-      productId: item._id, // Assuming item._id is the product ID
-      quantity: 1, // You can dynamically change this based on user input
+    await axios.post(`${CART_API}/cart`, {
+      userId,
+      productId: item._id,
+      quantity: 1,
     });
 
     alert('Item added to cart!');
   } catch (error) {
-    console.error('Error adding to cart:', error);
+    console.error('Error adding to cart:', error.response?.data || error.message);
     alert('Failed to add to cart');
   }
 };
+
+
+
 
   return (
     <div className="home-container">

@@ -290,8 +290,6 @@ function ManageProd() {
   }
 };
 
-
-
   const openProductEditModal = (product) => {
     setCurrentProduct(product);
     setFormData({

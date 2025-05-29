@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -6,11 +7,14 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import ManageProd from './pages/manageprod';
 import CartPage from './pages/CartPage.jsx';
-import Order from './pages/orderservice';
+import Order from './pages/orderservice'; 
 import Home from './pages/home';
+import OrderSummary from './pages/orderSummary.jsx'; 
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   const checkAuth = () => {
     const token = sessionStorage.getItem('authToken');
@@ -20,6 +24,7 @@ function App() {
         const now = Date.now() / 1000;
         if (decoded.exp > now) {
           setIsAuthenticated(true);
+          setCheckingAuth(false);
           return;
         }
       } catch (err) {
@@ -29,11 +34,14 @@ function App() {
 
     sessionStorage.clear();
     setIsAuthenticated(false);
+    setCheckingAuth(false);
   };
 
   useEffect(() => {
-    checkAuth();  
+    checkAuth();
   }, []);
+
+  if (checkingAuth) return <div>Loading...</div>; 
 
   return (
     <BrowserRouter>
@@ -42,11 +50,21 @@ function App() {
           path="/"
           element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
         />
+        <Route
+          path="/cartPage"
+          element={isAuthenticated ? <CartPage /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/orderservice"
+          element={isAuthenticated ? <Order /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/order-summary/:orderId"
+          element={isAuthenticated ? <OrderSummary /> : <Navigate to="/login" replace />}
+        />
         <Route path="/login" element={<LoginPage onLogin={checkAuth} />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/manageprod" element={<ManageProd />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </BrowserRouter>
   );
