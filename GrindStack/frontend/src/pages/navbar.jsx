@@ -23,7 +23,6 @@ function Navbar() {
           {/* changed */}
               <ShoppingCartIcon style={{ fontSize: '1.6rem' }} />
           </Link>
-
           
           <Link to="/manageprod" className="reservation-btn">
             Manage Products
