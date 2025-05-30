@@ -54,14 +54,35 @@ function CartPage() {
   const getTotal = () =>
     cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
-  const handleCheckout = () => {
-    const total = getTotal();
-    navigate('/order-summary/preview', {
-      state: {
-        cartItems,
-        total,
-      }
-    });
+  const handleCheckout = async () => {
+    try {
+      // Verify stock availability before proceeding
+      const stockCheckPromises = cartItems.map(async (item) => {
+        const response = await axios.get(`${PRODUCT_API}/products/${item._id}`);
+        const currentStock = response.data.stock;
+        
+        if (currentStock < item.quantity) {
+          throw new Error(`Not enough stock for ${item.name}. Only ${currentStock} available.`);
+        }
+        return true;
+      });
+      
+      await Promise.all(stockCheckPromises);
+      
+      // If stock check passes, proceed with checkout
+      const total = getTotal();
+      
+      // Navigate to order summary
+      navigate('/order-summary/preview', {
+        state: {
+          cartItems,
+          total,
+          userId
+        }
+      });
+    } catch (error) {
+      showAlert(error.message, 'error');
+    }
   };
 
   return (
