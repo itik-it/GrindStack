@@ -5,7 +5,7 @@ import {
 import Navbar from './navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './cartPage.css';
+import './CartPage.css';
 
 const CART_API = import.meta.env.VITE_CART_API;
 const PRODUCT_API = import.meta.env.VITE_PRODUCT_API;

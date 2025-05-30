@@ -51,7 +51,7 @@ function App() {
           element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
         />
         <Route
-          path="/cartPage"
+          path="/CartPage"
           element={isAuthenticated ? <CartPage /> : <Navigate to="/login" replace />}
         />
         <Route
