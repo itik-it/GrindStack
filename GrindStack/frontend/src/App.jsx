@@ -9,7 +9,7 @@ import ManageProd from './pages/manageprod';
 import CartPage from './pages/CartPage.jsx';
 import Order from './pages/orderservice'; 
 import Home from './pages/home';
-import OrderSummary from './pages/orderSummary.jsx'; 
+import OrderSummary from './pages/OrderSummary.jsx'; 
 
 
 function App() {
