@@ -1,4 +1,4 @@
-  const { redisClient } = require('../config/redisClient');
+const { redisClient } = require('../config/redisClient');
   const axios = require('axios');
 
   const PRODUCT_API_URL = process.env.PRODUCT_API_URL;
@@ -68,6 +68,12 @@
       } catch {
         return null;
       }
+    }
+
+    async clearCart(userId) {
+      const key = `cart:${userId}`;
+      await redisClient.del(key);
+      return { cleared: true };
     }
   }
 

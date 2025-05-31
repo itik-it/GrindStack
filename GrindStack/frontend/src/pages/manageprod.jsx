@@ -80,25 +80,20 @@ function ManageProd() {
     }
 
     try {
-      // Create a function to compress the image
+      // Compress and convert to JPEG for best compatibility and size
       const compressImage = (imageFile) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(imageFile);
           reader.onload = (event) => {
-            const img = new Image();
+            const img = new window.Image();
             img.src = event.target.result;
             img.onload = () => {
-              // Create canvas for compression
               const canvas = document.createElement('canvas');
-              // Set max dimensions (adjust as needed)
               const MAX_WIDTH = 600;
               const MAX_HEIGHT = 600;
-              
               let width = img.width;
               let height = img.height;
-              
-              // Calculate new dimensions while maintaining aspect ratio
               if (width > height) {
                 if (width > MAX_WIDTH) {
                   height = Math.round(height * MAX_WIDTH / width);
@@ -110,15 +105,13 @@ function ManageProd() {
                   height = MAX_HEIGHT;
                 }
               }
-              
               canvas.width = width;
               canvas.height = height;
-              
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, width, height);
-              
-              // Adjust quality (0.5 = 50% quality) - lower for smaller file size
-              const dataUrl = canvas.toDataURL(imageFile.type, 0.5);
+              // Use a unique variable name for context
+              const ctx2 = canvas.getContext('2d');
+              ctx2.drawImage(img, 0, 0, width, height);
+              // Always export as JPEG for best compression
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.4); // 0.4 = 40% quality
               resolve(dataUrl);
             };
             img.onerror = reject;

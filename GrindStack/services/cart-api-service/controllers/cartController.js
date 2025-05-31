@@ -31,3 +31,13 @@ exports.checkout = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.clearCart = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    await cartService.clearCart(userId);
+    res.status(204).send();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};

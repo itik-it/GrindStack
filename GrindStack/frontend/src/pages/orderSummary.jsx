@@ -6,6 +6,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './navbar';
+import './OrderSummary.css';
 
 const PRODUCT_API = import.meta.env.VITE_PRODUCT_API;
 const CART_API = import.meta.env.VITE_CART_API;
@@ -80,9 +81,9 @@ function OrderSummary() {
   return (
     <>
       <Navbar />
-      <Box sx={{ p: 4, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={10} lg={8}>
+      <div className="order-summary-root">
+        <div className="order-summary-center">
+          <Grid item xs={12} md={10} lg={8} className="order-summary-card">
             <Card elevation={3}>
               <CardContent>
                 <Typography variant="h4" gutterBottom>
@@ -150,8 +151,8 @@ function OrderSummary() {
               </CardContent>
             </Card>
           </Grid>
-        </Grid>
-      </Box>
+        </div>
+      </div>
 
       <Snackbar
         open={alert.open}

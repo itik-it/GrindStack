@@ -195,5 +195,6 @@ router.post('/', controller.addToCart);
 router.get('/:userId', controller.getCart);
 router.delete('/', controller.removeFromCart);
 router.post('/checkout', controller.checkout);
+router.delete('/:userId', controller.clearCart);
 
 module.exports = router;

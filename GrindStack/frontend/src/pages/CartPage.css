@@ -1,45 +1,67 @@
 .cart-container {
+  padding: 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Start the alignment from the top */
-  min-height: 100vh;
-  padding: 6rem;
+  align-items: center; /* This will vertically center the cart */
+  min-height: 100vh; /* Ensures the content takes full height of the viewport */
 }
 
-
 .cart-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 800px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cart-items {
-  flex: 3;
+  margin-bottom: 20px;
 }
 
 .cart-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid #ccc;
+  margin-bottom: 60px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .item-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 200px;
 }
 
-.item-controls {
+.quantity-controls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .cart-summary {
-  flex: 1;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
+  margin-top: 20px;
+  text-align: right;
+}
+
+.cart-summary .MuiTypography-root {
+  font-weight: bold;
+}
+
+.cart-summary button {
+  background-color: #1976d2;
+  color: #fff;
   border-radius: 8px;
-  align-self: flex-end;
+  padding: 12px;
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.cart-summary button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }

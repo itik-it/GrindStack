@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Typography, Button, Divider, Snackbar, Alert
+  Box, Typography, Button, Divider, Snackbar, Alert, IconButton, TextField
 } from '@mui/material';
 import Navbar from './navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import './CartPage.css';
 
 const CART_API = import.meta.env.VITE_CART_API;
@@ -39,6 +41,7 @@ function CartPage() {
         setCartItems(merged);
       } catch (err) {
         console.error('Error fetching cart:', err);
+        showAlert('There was an error fetching your cart. Please try again later.', 'error');
       }
     };
 
@@ -60,18 +63,23 @@ function CartPage() {
       const stockCheckPromises = cartItems.map(async (item) => {
         const response = await axios.get(`${PRODUCT_API}/products/${item._id}`);
         const currentStock = response.data.stock;
-        
+
         if (currentStock < item.quantity) {
           throw new Error(`Not enough stock for ${item.name}. Only ${currentStock} available.`);
         }
         return true;
       });
-      
+
+      // Wait for all stock checks to complete
       await Promise.all(stockCheckPromises);
-      
-      // If stock check passes, proceed with checkout
+
+      // Proceed to checkout if stock is available
       const total = getTotal();
-      
+
+      // Send request to clear the cart after successful checkout
+      await axios.delete(`${CART_API}/cart/${userId}`);
+      console.log('Cart cleared successfully on the backend');
+
       // Navigate to order summary
       navigate('/order-summary/preview', {
         state: {
@@ -80,8 +88,34 @@ function CartPage() {
           userId
         }
       });
+
+      // Clear the cart items from state after checkout
+      setCartItems([]);
     } catch (error) {
+      console.error('Checkout failed:', error);
       showAlert(error.message, 'error');
+    }
+  };
+
+  const updateQuantity = async (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      // Remove item from frontend state
+      setCartItems(cartItems.filter(item => item._id !== productId));
+      try {
+        // Remove item from backend cart
+        await axios.delete(`${CART_API}/cart`, {
+          data: { userId, productId }
+        });
+      } catch (err) {
+        console.error('Failed to remove item from cart:', err);
+        showAlert('Failed to remove item from cart', 'error');
+      }
+    } else {
+      // Update quantity in frontend state
+      setCartItems(cartItems.map(item => 
+        item._id === productId ? { ...item, quantity: newQuantity } : item
+      ));
+      // Optionally, you can update the backend here if you want real-time sync
     }
   };
 
@@ -101,7 +135,29 @@ function CartPage() {
                   <div className="item-info">
                     <Typography variant="h6">{item.name}</Typography>
                     <Typography variant="body2">₱{item.price.toFixed(2)}</Typography>
-                    <Typography variant="body2">Qty: {item.quantity}</Typography>
+
+                    {/* Quantity Controls */}
+                    <div className="quantity-controls">
+                      <IconButton
+                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                        aria-label="decrease"
+                      >
+                        <RemoveIcon />
+                      </IconButton>
+                      <TextField
+                        value={item.quantity}
+                        onChange={(e) => updateQuantity(item._id, parseInt(e.target.value))}
+                        variant="outlined"
+                        size="small"
+                        sx={{ width: '60px' }}
+                      />
+                      <IconButton
+                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                        aria-label="increase"
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </div>
                   </div>
                 </div>
               ))
